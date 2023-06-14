@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edtSearch"
+                android:layout_span="1"
+                />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnSearch_txt"
+                android:text="검색"
+                android:layout_span="1"
+                />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="편의시설별 검색▽"
+            android:id="@+id/facTxt"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="20dp" />
+
+        <TableLayout
+            android:id="@+id/facTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shrinkColumns="*"
+            android:layout_marginTop="20dp"
+            android:animateLayoutChanges="true"
+            >
+            <TableRow
+                android:layout_margin="5dp"
+                >
+                <CheckBox
+                    android:id="@+id/chk1"
+                    android:text="노인정"
+                    />
+                <CheckBox
+                    android:id="@+id/chk2"
+                    android:text="놀이터"
+                    />
+                <CheckBox
+                    android:id="@+id/chk3"
+                    android:text="운동장"
+                    />
+                <CheckBox
+                    android:id="@+id/chk4"
+                    android:text="테니스장"
+                    />
+            </TableRow>
+            <TableRow
+                android:layout_margin="5dp"
+                >
+                <CheckBox
+                    android:id="@+id/chk5"
+                    android:text="수영장"
+                    />
+                <CheckBox
+                    android:id="@+id/chk6"
+                    android:text="궁도장"
+                    />
+                <CheckBox
+                    android:id="@+id/chk7"
+                    android:text="야구장"
+                    />
+                <CheckBox
+                    android:id="@+id/chk8"
+                    android:text="축구장"
+                    />
+            </TableRow>
+            <TableRow
+                android:layout_margin="5dp"
+                >
+                <CheckBox
+                    android:id="@+id/chk9"
+                    android:text="농구장"
+                    />
+                <CheckBox
+                    android:id="@+id/chk10"
+                    android:text="배구장"
+                    />
+                <CheckBox
+                    android:id="@+id/chk11"
+                    android:text="배드민턴장"
+                    />
+                <CheckBox
+                    android:id="@+id/chk12"
+                    android:text="골프장"
+                    />
+            </TableRow>
+
+            <TableRow
+                android:layout_margin="5dp"
+                >
+
+                <CheckBox
+                    android:id="@+id/chk13"
+                    android:text="게이트볼"
+                    />
+                <CheckBox
+                    android:id="@+id/chk14"
+                    android:text="체력단련시설"
+                    />
+                <CheckBox
+                    android:id="@+id/chk15"
+                    android:text="동물원"
+                    />
+                <CheckBox
+                    android:id="@+id/chk16"
+                    android:text="식물원"
+                    />
+            </TableRow>
+            <TableRow
+                android:layout_margin="5dp"
+                >
+
+                <CheckBox
+                    android:id="@+id/chk17"
+                    android:text="도서관"
+                    />
+                <CheckBox
+                    android:id="@+id/chk18"
+                    android:text="문화회관"
+                    />
+            </TableRow>
+        </TableLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="공원 목록"
+        android:textSize="20dp"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_Park"
+        />
+
+</LinearLayout>
