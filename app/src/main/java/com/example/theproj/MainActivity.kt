@@ -50,6 +50,11 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        binding.btnMap.setOnClickListener {
+            var intent = Intent(applicationContext, CheckActivity::class.java)
+            startActivity(intent)
+        }
+
 
         binding.btnInmy.setOnClickListener {
             var intent = Intent(applicationContext, MapsActivity::class.java)
@@ -59,6 +64,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnSearch.setOnClickListener {
             var intent = Intent(applicationContext, LocActivity::class.java)
+            intent.putExtra("id", true)
             startActivity(intent)
         }
 

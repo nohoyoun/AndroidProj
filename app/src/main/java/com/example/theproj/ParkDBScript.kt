@@ -1,6 +1,8 @@
 package com.example.theproj
 
 import androidx.room.*
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 
 @Entity
@@ -48,9 +50,6 @@ interface ParkDBInterface {
     @Query("SELECT Name FROM ParkDB")
     suspend fun getName() : List<String>
 
-
-
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(parkDB: ParkDB)
 
@@ -62,4 +61,8 @@ interface ParkDBInterface {
 abstract class AppDatabase: RoomDatabase() {
     abstract fun parkDBInterface() : ParkDBInterface
 }
+
+
+
+
 
