@@ -34,7 +34,7 @@ class SearchActivity : AppCompatActivity() {
         val ParkDBTable = Room.databaseBuilder(this, AppDatabase::class.java, "db").build()
         var checkId_list = arrayListOf<CheckBox>(binding.chk1, binding.chk2, binding.chk3, binding.chk4, binding.chk5, binding.chk6,
             binding.chk7, binding.chk8, binding.chk9, binding.chk10, binding.chk11, binding.chk12, binding.chk13, binding.chk14,
-            binding.chk15, binding.chk16)
+            binding.chk15, binding.chk16, binding.chk17, binding.chk18)
 
 
         binding.facTxt.setOnClickListener {
@@ -67,16 +67,20 @@ class SearchActivity : AppCompatActivity() {
 
             }
 
+        scrollList()
+
         }
 
     fun Searching(checkId_list : ArrayList<CheckBox>, loc_name : String, ParkDBTable : AppDatabase) {
         var count = 0
         var strId : List<String>
+
         for (i in checkId_list) {//체크박스로 검색
             if(i.isChecked) {
                 CoroutineScope(Dispatchers.Main).launch {
                     strId = ParkDBTable.parkDBInterface().getNamebyLF(loc_name, i.text.toString())
-                    Log.d("지역로그", strId.toString())
+                    Log.d("지역로그", i.text.toString())
+                    Log.d("편의시설로그", strId.toString())
 
                     if(strId != null) {
                         SeeList(strId, ParkDBTable)
@@ -109,13 +113,13 @@ class SearchActivity : AppCompatActivity() {
     fun SeeList(strid : List<String>, ParkDBTable: AppDatabase) {
 
         var fac : String
-
         var item = mutableListOf<list_View_Item>()
 
         item.clear()
 
         for(i in strid){
             CoroutineScope(Dispatchers.Main).launch {
+                Log.d("strid", strid.toString())
                 fac = ParkDBTable.parkDBInterface().getfacbyName(i)
                 Log.d("SeeList fac출력", fac)
                 if(fac == null) {
@@ -135,6 +139,12 @@ class SearchActivity : AppCompatActivity() {
         val adapter = ContentAdapter(item)
         binding.listPark.adapter = adapter
         item.clear()
+    }
+
+    private fun scrollList() {
+        binding.listPark.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+
+        }
     }
 }
 

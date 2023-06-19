@@ -141,6 +141,7 @@
         android:text="공원 목록"
         android:textSize="20dp"/>
     <ListView
+        tools:listitem="@layout/park_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/list_Park"

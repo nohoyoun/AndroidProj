@@ -55,6 +55,7 @@ interface ParkDBInterface {
 
     @Query("DELETE FROM ParkDB")
     suspend fun deleteAll()
+
 }
 
 @Database(entities = [ParkDB::class], version = 1)

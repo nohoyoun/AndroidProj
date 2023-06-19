@@ -3,9 +3,12 @@ package com.example.theproj
 
 import android.Manifest
 import android.app.Activity
+import android.app.Notification
+import android.app.NotificationManager
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
@@ -20,6 +23,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.theproj.databinding.ActivityCheckBinding
 import com.example.theproj.retrofit.AirQualityResponse
@@ -95,6 +99,7 @@ class CheckActivity : AppCompatActivity() {
     private fun setRefreshButton() {
         binding.btnRefresh.setOnClickListener {
             updateUI()
+
         }
     }
 
@@ -281,5 +286,21 @@ class CheckActivity : AppCompatActivity() {
             finish()
         })
         builder.create().show()
+    }
+
+    fun setAlarm() {
+        var mBitmap = BitmapFactory.decodeResource(resources, R.drawable.baseline_mood_24)
+        var mBuilder = NotificationCompat.Builder(this@CheckActivity)
+
+        mBuilder
+            .setDefaults(Notification.DEFAULT_VIBRATE)
+            .setAutoCancel(true)
+            .setSmallIcon(R.drawable.baseline_mood_24)
+            .setLargeIcon(mBitmap)
+            .setContentTitle("알림")
+            .setContentText("오늘은 미세먼지가 별로없어요! 산책을 나가는건 어떨까요?")
+
+        var mNotificationManager : NotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        mNotificationManager.notify(0, mBuilder.build())
     }
 }
