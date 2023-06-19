@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnInmy.setOnClickListener {
             var intent = Intent(applicationContext, MapsActivity::class.java)
+            intent.putExtra("value_Whole", 2)
             startActivity(intent)
 
         }

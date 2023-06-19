@@ -1,12 +1,16 @@
 package com.example.theproj
 
+import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.CompoundButton
+import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.room.Room
 import com.example.theproj.databinding.ActivitySearchBinding
@@ -67,7 +71,6 @@ class SearchActivity : AppCompatActivity() {
 
             }
 
-        scrollList()
 
         }
 
@@ -81,7 +84,6 @@ class SearchActivity : AppCompatActivity() {
                     strId = ParkDBTable.parkDBInterface().getNamebyLF(loc_name, i.text.toString())
                     Log.d("지역로그", i.text.toString())
                     Log.d("편의시설로그", strId.toString())
-
                     if(strId != null) {
                         SeeList(strId, ParkDBTable)
                     }else{
@@ -111,28 +113,29 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun SeeList(strid : List<String>, ParkDBTable: AppDatabase) {
-
         var fac : String
         var item = mutableListOf<list_View_Item>()
 
-        item.clear()
-
         for(i in strid){
             CoroutineScope(Dispatchers.Main).launch {
-                Log.d("strid", strid.toString())
+                //Log.d("strid", strid.toString())
                 fac = ParkDBTable.parkDBInterface().getfacbyName(i)
                 Log.d("SeeList fac출력", fac)
                 if(fac == null) {
                     fac = " "
                 }
                 item.add(list_View_Item(i,fac))
-
                 Log.d("item 로그", item.toString())
                 val adapter = ContentAdapter(item)
                 binding.listPark.adapter = adapter
                 adapter.notifyDataSetChanged()
+
+                scrollList(item, ParkDBTable)
             }
         }
+
+        item.clear()
+
     }
     fun removeList() {
         var item = mutableListOf<list_View_Item>()
@@ -141,8 +144,30 @@ class SearchActivity : AppCompatActivity() {
         item.clear()
     }
 
-    private fun scrollList() {
-        binding.listPark.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+    fun scrollList(item: MutableList<list_View_Item>, ParkDBTable: AppDatabase) {
+        binding.listPark.setOnItemClickListener { parent, view, position, id ->
+
+            var dlg = AlertDialog.Builder(this)
+                .setTitle(item[position].title)
+                .setMessage("주요 시설\n" + item[position].fac)
+                .setNegativeButton("닫기", DialogInterface.OnClickListener { dialog, which ->
+                })
+                .setPositiveButton("지도에서보기", DialogInterface.OnClickListener { dialog, which ->
+                    CoroutineScope(Dispatchers.Main).launch {
+                        var getX = ParkDBTable.parkDBInterface().getXbyName(item[position].title)
+                        var getY = ParkDBTable.parkDBInterface().getYbyName(item[position].title)
+                        Log.d("x좌표", getX.toString())
+                        Log.d("y좌표", getY.toString())
+
+                        var intent = Intent(applicationContext, MapsActivity::class.java)
+                        intent.putExtra("getNamebyS", item[position].title)
+                        intent.putExtra("getXbyS", getX)
+                        intent.putExtra("getYbyS", getY)
+                        intent.putExtra("switch", 1)
+                        startActivity(intent)
+                    }
+                })
+                .show()
 
         }
     }

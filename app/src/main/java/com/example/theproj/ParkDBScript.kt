@@ -56,6 +56,11 @@ interface ParkDBInterface {
     @Query("DELETE FROM ParkDB")
     suspend fun deleteAll()
 
+    @Query("SELECT x FROM ParkDB where name = :i")
+    suspend fun getXbyName(i : String) : Float
+
+    @Query("SELECT y FROM ParkDB where name = :i")
+    suspend fun getYbyName(i : String) : Float
 }
 
 @Database(entities = [ParkDB::class], version = 1)

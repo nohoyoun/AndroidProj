@@ -3,6 +3,7 @@ package com.example.theproj
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -47,6 +48,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     lateinit var name: String
     lateinit var fac : String
     lateinit var loc : String
+    var getX : Float = 0.0f
+    var getY : Float = 0.0f
+    lateinit var  getName : String
+    var switch_Search : Int = 0
+
 
     private lateinit var mMap: GoogleMap
 
@@ -61,6 +67,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
 
         var intent = intent
+
+        switch_Search = intent.getIntExtra("switch", 0)
+
 
         for (i in 1..2631) {
             x = intent.getStringExtra("get_X_$i").toString()
@@ -107,7 +116,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val locationRequest = LocationRequest.create()
         locationRequest.run {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            interval = 10000
+            interval = 50000
         }
 
         locationCallback = object : LocationCallback() {
@@ -152,47 +161,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.clear()
         mMap.addMarker(markerOptions)
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-
-        var circle1km = CircleOptions()
-            .center(LATLNG)
-            .radius(1000.0)
-            .fillColor(Color.parseColor("#880000ff"))
-
         //내 위치
 
-
-        var discriptor_park = BitmapDescriptorFactory.fromBitmap(bitmapPark.bitmap)
-          val ParkDBTable = Room.databaseBuilder(this, AppDatabase::class.java, "db").build()
-
-        CoroutineScope(Dispatchers.Main).launch {
-            var latLng_Park : LatLng? = null
-
-            var x_list = ParkDBTable.parkDBInterface().getX()
-            var y_list = ParkDBTable.parkDBInterface().getY()
-            var name_list = ParkDBTable.parkDBInterface().getName()
-
-            for (i in (0..x_list.size-1)) {
-                latLng_Park = LatLng(x_list[i].toDouble(), y_list[i].toDouble())
-                Log.d("좌표는 ", "$latLng_Park")
-                //고칠것 1
-                    //내 위치를 기준으로 거리찾기
-
-                var MytoPark = distancebyDegree(lastLocation.latitude, lastLocation.longitude, x_list[i].toDouble(), y_list[i].toDouble())
-
-                if(MytoPark < 10000) {
-                    mMap.addMarker(MarkerOptions()
-                        .position(latLng_Park)
-                        .title(name_list[i])
-                        .icon(discriptor_park)
-                    )
-                }
-            }
-
-            for (i in 1..name_list.size-1) {
-                mMap.setOnMarkerClickListener(this@MapsActivity)
-            }
+        if(switch_Search == 0) {
+            parkLocation(lastLocation, bitmapPark)
+        }else{
+            bySearchAct(markerOptions, bitmapPark)
         }
-
 
     }
 
@@ -207,6 +182,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             var dlg = AlertDialog.Builder(this)
                 .setTitle(p0.title)
                 .setMessage("주요 시설\n" + fac)
+                .setNegativeButton("닫기", DialogInterface.OnClickListener { dialog, which ->
+                })
                 .show()
         }
         return true
@@ -241,5 +218,63 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         return distance
     }
 
+    fun parkLocation(lastLocation: Location, bitmapPark : BitmapDrawable) {
+
+        var discriptor_park = BitmapDescriptorFactory.fromBitmap(bitmapPark.bitmap)
+        val ParkDBTable = Room.databaseBuilder(this, AppDatabase::class.java, "db").build()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            var latLng_Park : LatLng? = null
+
+            var x_list = ParkDBTable.parkDBInterface().getX()
+            var y_list = ParkDBTable.parkDBInterface().getY()
+            var name_list = ParkDBTable.parkDBInterface().getName()
+
+            for (i in (0..x_list.size-1)) {
+                latLng_Park = LatLng(x_list[i].toDouble(), y_list[i].toDouble())
+                Log.d("좌표는 ", "$latLng_Park")
+
+                //내 위치를 기준으로 거리찾기
+                var MytoPark = distancebyDegree(lastLocation.latitude, lastLocation.longitude, x_list[i].toDouble(), y_list[i].toDouble())
+
+                if(MytoPark < 10000) {
+                    mMap.addMarker(MarkerOptions()
+                        .position(latLng_Park)
+                        .title(name_list[i])
+                        .icon(discriptor_park)
+                    )
+                }
+            }
+
+            for (i in 1..name_list.size-1) {
+                //mMap.setOnMarkerClickListener(this@MapsActivity)
+            }
+        }
+    }
+
+    fun bySearchAct(markerOptions: MarkerOptions, bitmapPark: BitmapDrawable) {
+        var discriptor_park = BitmapDescriptorFactory.fromBitmap(bitmapPark.bitmap)
+        getX = intent.getFloatExtra("getXbyS", 0.0f)
+        getY = intent.getFloatExtra("getYbyS", 0.0f)
+        getName = intent.getStringExtra("getNamebyS").toString()
+        Log.d("getX", getX.toString())
+        Log.d("getY", getY.toDouble().toString())
+
+
+        var latLng_Park = LatLng(getX.toDouble(), getY.toDouble())
+        mMap.addMarker(MarkerOptions()
+            .position(latLng_Park)
+            .title(getName)
+            .icon(discriptor_park)
+        )
+
+        val cameraPosition = CameraPosition.Builder()
+            .target(latLng_Park)
+            .zoom(8.0f)
+            .build()
+        mMap.addMarker(markerOptions)
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+
+    }
 
 }
