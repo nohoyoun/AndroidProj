@@ -10,15 +10,19 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.location.Location
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.room.Room
 
@@ -30,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.theproj.databinding.ActivityMapsBinding
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.UiSettings
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.CircleOptions
@@ -97,6 +102,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION)
         )
+
+
+
     }
 
     fun startProcess() {
@@ -116,7 +124,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val locationRequest = LocationRequest.create()
         locationRequest.run {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            interval = 50000
+            interval = 10000
         }
 
         locationCallback = object : LocationCallback() {
@@ -172,8 +180,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     override fun onMarkerClick(p0: Marker): Boolean {
-        val ParkDBTable = Room.databaseBuilder(this, AppDatabase::class.java, "db").build()
-
+   /*     val ParkDBTable = Room.databaseBuilder(this, AppDatabase::class.java, "db").build()
         if(p0.title.toString() == "내 현재 위치") {
             Toast.makeText(applicationContext, p0.title, Toast.LENGTH_SHORT).show()
         }else{
@@ -186,8 +193,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 })
                 .show()
         }
+        return true*/
+        p0.title
+        p0.showInfoWindow()
+        SearchRoad(p0.position.latitude.toFloat(), p0.position.longitude.toFloat())
         return true
-        //여기다가 클릭이벤트 작성
     }
 
     //편의시설 출력함수
@@ -246,9 +256,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 }
             }
 
-            for (i in 1..name_list.size-1) {
-                //mMap.setOnMarkerClickListener(this@MapsActivity)
-            }
+            mMap.setOnMarkerClickListener(this@MapsActivity)
         }
     }
 
@@ -275,6 +283,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.addMarker(markerOptions)
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
+        SearchRoad(getX, getY)
+
     }
+
+    fun SearchRoad(getX : Float, getY : Float) {
+        binding.btnRoad.setOnClickListener {
+            var intent = Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("https://www.google.com/maps/search/?api=1&query=$getX,$getY"))
+            startActivity(intent)
+
+        }
+    }
+
 
 }
