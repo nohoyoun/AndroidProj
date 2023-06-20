@@ -44,6 +44,7 @@ class AlarmService : Service() {
 
     override fun onDestroy() {
         Log.d("Log", "Service Stop")
+        //
         super.onDestroy()
     }
 
