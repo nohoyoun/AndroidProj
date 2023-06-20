@@ -103,8 +103,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 Manifest.permission.ACCESS_FINE_LOCATION)
         )
 
-
-
     }
 
     fun startProcess() {
@@ -117,6 +115,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap = googleMap
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         updateLocation()
+
+        mMap.uiSettings.isMapToolbarEnabled = false
+        mMap.uiSettings.isZoomControlsEnabled = true
+
     }
 
     @SuppressLint("MissingPermission")
@@ -124,7 +126,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         val locationRequest = LocationRequest.create()
         locationRequest.run {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            interval = 10000
+            interval = 100000
         }
 
         locationCallback = object : LocationCallback() {

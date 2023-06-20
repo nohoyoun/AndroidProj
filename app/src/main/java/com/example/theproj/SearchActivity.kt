@@ -16,6 +16,7 @@ import androidx.room.Room
 import com.example.theproj.databinding.ActivitySearchBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlin.math.log
 
@@ -112,31 +113,41 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
-    fun SeeList(strid : List<String>, ParkDBTable: AppDatabase) {
-        var fac : String
+    suspend fun SeeList(strid : List<String>, ParkDBTable: AppDatabase) {
+
+        var item = additem(strid, ParkDBTable)
+        Log.d("item 로그", item.toString())
+
+        val adapter = ContentAdapter(item)
+        binding.listPark.adapter = adapter
+        adapter.notifyDataSetChanged()
+        scrollList(item, ParkDBTable)
+    }
+
+    suspend fun additem(strid : List<String>, ParkDBTable: AppDatabase) : MutableList<list_View_Item> {
         var item = mutableListOf<list_View_Item>()
 
         for(i in strid){
-            CoroutineScope(Dispatchers.Main).launch {
-                //Log.d("strid", strid.toString())
-                fac = ParkDBTable.parkDBInterface().getfacbyName(i)
-                Log.d("SeeList fac출력", fac)
-                if(fac == null) {
-                    fac = " "
-                }
-                item.add(list_View_Item(i,fac))
-                Log.d("item 로그", item.toString())
-                val adapter = ContentAdapter(item)
-                binding.listPark.adapter = adapter
-                adapter.notifyDataSetChanged()
-
-                scrollList(item, ParkDBTable)
-            }
+            var fac = addfac(i, ParkDBTable)
+            item.add(list_View_Item(i,fac.toString()))
         }
 
-        item.clear()
-
+        return item
     }
+
+    suspend fun addfac(i : String, ParkDBTable: AppDatabase) : String {
+         var fac_id = CoroutineScope(Dispatchers.Main).async {
+            //Log.d("strid", strid.toString())
+            var fac = ParkDBTable.parkDBInterface().getfacbyName(i)
+            Log.d("SeeList fac출력", fac)
+            if(fac == null) {
+                fac = " "
+            }
+            fac
+        }
+        return fac_id.await()
+    }
+
     fun removeList() {
         var item = mutableListOf<list_View_Item>()
         val adapter = ContentAdapter(item)

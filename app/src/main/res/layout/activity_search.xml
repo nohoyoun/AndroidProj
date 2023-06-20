@@ -139,12 +139,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="공원 목록"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         android:textSize="20dp"/>
+
     <ListView
-        tools:listitem="@layout/park_list_item"
+        android:id="@+id/list_Park"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/list_Park"
-        />
+        android:fastScrollAlwaysVisible="true"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        tools:listitem="@layout/park_list_item" />
 
 </LinearLayout>

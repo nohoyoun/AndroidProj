@@ -6,6 +6,7 @@ import android.content.res.AssetManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import androidx.room.*
 import com.example.theproj.databinding.ActivityMainBinding
@@ -70,10 +71,13 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
+        alramService()
     }
 
-
+    fun alramService() {
+        var intent = Intent(applicationContext, AlarmService::class.java)
+        startService(intent)
+    }
 
 }
 
