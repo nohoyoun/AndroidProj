@@ -24,13 +24,13 @@ data class AirQualityResponse(
             )
 
             data class Weather(
-                val hu: Int,
-                val ic: String,
-                val pr: Int,
-                val tp: Int,
+                val hu: Int,    //습기
+                val ic: String, //날씨 아이콘
+                val pr: Int,    //대기압
+                val tp: Int,    //온도
                 val ts: String,
-                val wd: Int,
-                val ws: Double
+                val wd: Int,    //풍향
+                val ws: Double  //바람속도
             )
         }
 

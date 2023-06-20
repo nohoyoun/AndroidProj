@@ -139,6 +139,7 @@ class CheckActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     Toast.makeText(this@CheckActivity, "최신 정보 업데이트 완료!", Toast.LENGTH_SHORT).show() //만약 response.body()가 null 이 아니라면 updateAirUI()
                     response.body()?.let { updateAirUI(it) }
+                    response.body()?.let { updateWeatherUI(it) }
                 } else {
                     Toast.makeText(this@CheckActivity, "업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
@@ -303,4 +304,65 @@ class CheckActivity : AppCompatActivity() {
         var mNotificationManager : NotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         mNotificationManager.notify(0, mBuilder.build())
     }
+    private fun updateWeatherUI(airQualityData: AirQualityResponse) {
+        val weatherData = airQualityData.data.current.weather
+        binding.tvIc.text = weatherData.tp.toString()
+
+        val dateTime = ZonedDateTime.parse(weatherData.ts).withZoneSameInstant(ZoneId.of("Asia/Seoul")).toLocalDateTime()
+
+        when (weatherData.ic) {
+            "01d" -> {
+                binding.ivWeather.setImageResource(R.drawable.d01)
+                binding.tvWeather.setText("맑음")
+            }
+            "01n" -> {
+                binding.ivWeather.setImageResource(R.drawable.n01)
+                binding.tvWeather.setText("맑음")
+            }
+            "02d" -> {
+                binding.ivWeather.setImageResource(R.drawable.d02)
+                binding.tvWeather.setText("구름 조금")
+            }
+            "02n" -> {
+                binding.ivWeather.setImageResource(R.drawable.n02)
+                binding.tvWeather.setText("구름 조금")
+            }
+            "03d" -> {
+                binding.ivWeather.setImageResource(R.drawable.d03)
+                binding.tvWeather.setText("흩어진 구름")
+            }
+            "04d" -> {
+                binding.ivWeather.setImageResource(R.drawable.d04)
+                binding.tvWeather.setText("깨진 구름")
+            }
+            "09d" -> {
+                binding.ivWeather.setImageResource(R.drawable.d09)
+                binding.tvWeather.setText("소나기")
+            }
+            "10d" -> {
+                binding.ivWeather.setImageResource(R.drawable.d10)
+                binding.tvWeather.setText("비")
+            }
+            "10n" -> {
+                binding.ivWeather.setImageResource(R.drawable.n10)
+                binding.tvWeather.setText("비")
+            }
+            "11d" -> {
+                binding.ivWeather.setImageResource(R.drawable.d11)
+                binding.tvWeather.setText("번개를 동반한 비")
+            }
+            "13d" -> {
+                binding.ivWeather.setImageResource(R.drawable.d13)
+                binding.tvWeather.setText("눈")
+            }
+            "50d" -> {
+                binding.ivWeather.setImageResource(R.drawable.d50)
+                binding.tvWeather.setText("안개")
+            }
+            else -> {
+                Log.d("날씨아이콘", weatherData.ic)
+            }
+        }
+    }
+
 }
