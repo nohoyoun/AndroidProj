@@ -3,17 +3,12 @@ package com.example.theproj
 
 import android.Manifest
 import android.app.Activity
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -34,7 +29,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -293,6 +287,7 @@ class CheckActivity : AppCompatActivity() {
 
     private fun updateWeatherUI(airQualityData: AirQualityResponse) {
         val weatherData = airQualityData.data.current.weather
+        Log.d("온도", weatherData.tp.toString())
         binding.tvIc.text = weatherData.tp.toString()
 
         val dateTime = ZonedDateTime.parse(weatherData.ts).withZoneSameInstant(ZoneId.of("Asia/Seoul")).toLocalDateTime()
@@ -319,6 +314,10 @@ class CheckActivity : AppCompatActivity() {
                 binding.tvWeather.setText("흩어진 구름")
             }
             "04d" -> {
+                binding.ivWeather.setImageResource(R.drawable.d04)
+                binding.tvWeather.setText("깨진 구름")
+            }
+            "04n" -> {
                 binding.ivWeather.setImageResource(R.drawable.d04)
                 binding.tvWeather.setText("깨진 구름")
             }
